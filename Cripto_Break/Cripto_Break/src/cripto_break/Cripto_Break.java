@@ -1,13 +1,49 @@
 package cripto_break;
 
+import java.awt.EventQueue;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 public class Cripto_Break {
 
     public static void main(String[] args) {
-        String m = JOptionPane.showInputDialog("Qual a mensagem que deseja criptografar");
+        Object[] options = {"Criptografar","Descriptografar"};
+        int cont = 0;
+        int x = 0;
+        JTextArea ta = new JTextArea(30,30);
         
-        System.out.println((Decodificacao(m)));
+        
+        
+        do{
+        
+        x = JOptionPane.showOptionDialog(null, "O que você quer fazer?", "Escolha", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options);
+        if(x == 0)
+        {
+            String m = JOptionPane.showInputDialog("Qual a mensagem que deseja criptografar");
+            ta.setText(Codificacao(m));
+            ta.setWrapStyleWord(true);
+            ta.setLineWrap(true);
+            ta.setCaretPosition(0);
+            ta.setEditable(false);
+            JOptionPane.showMessageDialog(null, new JScrollPane(ta),"Resultado",JOptionPane.INFORMATION_MESSAGE);
+        }
+        else if(x == 1)
+        {
+            String m = JOptionPane.showInputDialog("Qual a mensagem que deseja Descriptografar");
+            ta.setText(Decodificacao(m));
+            ta.setWrapStyleWord(true);
+            ta.setLineWrap(true);
+            ta.setCaretPosition(0);
+            ta.setEditable(false);
+            JOptionPane.showMessageDialog(null, new JScrollPane(ta),"Resultado",JOptionPane.INFORMATION_MESSAGE);
+        }
+        
+        cont = JOptionPane.showConfirmDialog(null, "Continuar?", "Continue?", JOptionPane.YES_NO_OPTION);
+        
+        }while(cont == 0);
     }
     
     private static String Codificacao(String mensagem){
@@ -26,40 +62,45 @@ public class Cripto_Break {
             else{
                f_d += vet_cod[i];
             }
-            
         }
         f = f_d + f_e;
         return f;
     }
     
     private static String Decodificacao(String mensagem){
-        int t = mensagem.length();
-        int tm = t/2;
+        int t = mensagem.length();        
         char vet_deco[] = new char [t];
+        char va_d [] = new char [t];
+        char va_e [] = new char [t];
         vet_deco = mensagem.toCharArray();
-        char a_d [] = new char [t];
-        char a_e [] = new char [t];
+        String a_d;
+        String a_e;
         String f = "";
-        
-        
-        for(int i = 0; i < tm; i++)
-        {
-            a_d[i] += vet_deco[i];
-        }
-        
-        for(int i = tm; i < t; i++)
-        {
-            a_e[i] += vet_deco[i];
-        }
-        
-        for(int i = 0; i < t; i++)
-        {
-            f += a_d[i];
-            f += a_e[i];
-        }
-        
-        return f;
-        
-    }
+        int tm;
 
+        
+        if (t == 0 || t %2 == 0){
+            tm = t/2;
+            a_d = mensagem.substring(tm, t);
+            a_e = mensagem.substring(0,tm);
+        }
+        else {
+            tm = (t-1)/2;
+            a_d = mensagem.substring(tm, t);
+            a_e = mensagem.substring(0,tm);
+        }
+
+        for (int i = 0; i < a_d.length(); i++){
+            va_d[i] = a_d.charAt(i);
+        }
+        for (int i = 0; i < a_e.length(); i++){
+            va_e[i] = a_e.charAt(i);
+        }
+        
+        for (int i = 0; i < a_d.length(); i++){
+            f += va_d[i];
+            f += va_e[i];
+        }        
+        return f;   
+    }
 }
